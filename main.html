@@ -1,0 +1,78 @@
+<style>
+    body{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    #content{
+        background-color: rgb(222, 222, 222);
+        border-radius: 10px;
+
+        width: 50%;
+        display: flex;
+        align-self: center;
+        align-items: center;
+        flex-direction: column;
+
+    }
+</style>
+<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+<py-script>
+    from js import document, XMLHttpRequest
+    import xml.etree.ElementTree as ET
+
+    req = XMLHttpRequest.new()
+    req.open("GET", "https://raw.githubusercontent.com/UnigramDev/Unigram/develop/Unigram/Unigram/Unigram.csproj", False)
+    req.send(None)
+    root = ET.fromstring(req.response)
+    first_property = None
+    for child in root:
+        if child.tag.find("PropertyGroup") >= 0:
+            first_property = child
+            break
+    if first_property is None:
+        print("Something is wrong with file, please comment this in Unigram Insiders")
+        exit()
+    min_version = None
+    for child in first_property:
+        if child.tag.find("TargetPlatformMinVersion") >= 0:
+            min_version = child
+    if min_version is None:
+        print("Could not get minimal version, please comment this in Unigram Insiders")
+
+    min_version_text = min_version.text
+
+    element = Element("min_version")
+    element.write(min_version_text)
+
+</py-script>
+
+<div id="content">
+    <div>
+        <h2>Current minimal build version is:</h2>
+    </div>
+    <div>
+        <p id="min_version"></p>
+    </div>
+    <div>
+        <details>
+        <summary>About</summary>
+            This page tells you a minimal build number to install Unigram<br>
+            This number is taken from <a href="https://github.com/UnigramDev/Unigram/blob/develop/Unigram/Unigram/Unigram.csproj">this file</a><br>
+            Links to check build numbers to version relations:
+            <ul>
+                <li>
+                    <a href="https://learn.microsoft.com/en-us/windows/release-health/release-information">Windows 10 (MS)</a>
+                </li>
+                <li>
+                    <a href="https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information">Windows 11 (MS)</a>
+                </li>
+                <li>
+                    <a href="https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions">Wikipedia</a>
+                </li>
+            </ul>
+        </details>
+    </div>
+</div>
