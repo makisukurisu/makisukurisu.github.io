@@ -1,104 +1,109 @@
-<style>
-    body {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    #content {
-        background-color: rgb(222, 222, 222);
-        border-radius: 10px;
-
-        width: 50%;
-        display: flex;
-        align-self: center;
-        align-items: center;
-        flex-direction: column;
-
-    }
-</style>
-<link rel="icon" type="image/x-icon" href="favicon.png">
-<title>Version crawler</title>
-
-<div id="content">
-    <div>
-        <h2>Current minimal build version is:</h2>
-    </div>
-    <div>
-        <p id="min_version"></p>
-    </div>
-    <div>
-        <details>
-            <summary>About</summary>
-            This page tells you a minimal build number to install Unigram<br>
-            This number is taken from <a
-                href="https://github.com/UnigramDev/Unigram/blob/develop/Unigram/Unigram/Unigram.csproj">this
-                file</a><br>
-            Links to check build numbers to version relations:
-            <ul>
-                <li>
-                    <a href="https://learn.microsoft.com/en-us/windows/release-health/release-information">Windows 10
-                        (MS)</a>
-                </li>
-                <li>
-                    <a href="https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information">Windows
-                        11 (MS)</a>
-                </li>
-                <li>
-                    <a href="https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions">Wikipedia</a>
-                </li>
-            </ul>
-        </details>
-    </div>
-</div>
-
-<script>
-
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open(
-        "GET",
-        "https://raw.githubusercontent.com/UnigramDev/Unigram/develop/Unigram/Unigram/Unigram.csproj",
-        false
-    ); // Synchronous because I don't care :)
-    xmlHttp.send(null); //Null body
-
-    XMLToParse = xmlHttp.responseText;
-
-
-    parser = new DOMParser();
-    xmlDoc = parser.parseFromString(XMLToParse, "application/xml");
-
-    var first_element = xmlDoc.activeElement;
-    var property_group = null;
-    var min_version_node = null;
-    children = first_element.children;
-    for (let index = 0; index < children.length; index++) {
-        const element = children[index];
-
-        if (element.nodeName == "PropertyGroup") {
-            property_group = element;
-            break;
+<!DOCTYPE html>
+<head>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
         }
-    }
-    if (property_group == null) {
-        document.write("ERROR! PropertyGroup not found!");
-    }
 
-    children = property_group.children;
-    for (let index = 0; index < children.length; index++) {
-        const element = children[index];
+        #content {
+            background-color: rgb(222, 222, 222);
+            border-radius: 10px;
 
-        if (element.nodeName == "TargetPlatformMinVersion") {
-            min_version_node = element;
-            break;
+            width: 50%;
+            display: flex;
+            align-self: center;
+            align-items: center;
+            flex-direction: column;
+
         }
-    }
-    if (min_version_node == null) {
-        document.write("ERROR! TargetPlatformMinVersion not found!");
-    }
+    </style>
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <title>Version crawler</title>
+</head>
 
-    var min_version = document.getElementById("min_version");
-    min_version.innerText = min_version_node.textContent;
+<body>
+    <div id="content">
+        <div>
+            <h2>Current minimal build version is:</h2>
+        </div>
+        <div>
+            <p id="min_version"></p>
+        </div>
+        <div>
+            <details>
+                <summary>About</summary>
+                This page tells you a minimal build number to install Unigram<br>
+                This number is taken from <a
+                    href="https://github.com/UnigramDev/Unigram/blob/develop/Unigram/Unigram/Unigram.csproj">this
+                    file</a><br>
+                Links to check build numbers to version relations:
+                <ul>
+                    <li>
+                        <a href="https://learn.microsoft.com/en-us/windows/release-health/release-information">Windows 10
+                            (MS)</a>
+                    </li>
+                    <li>
+                        <a href="https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information">Windows
+                            11 (MS)</a>
+                    </li>
+                    <li>
+                        <a href="https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions">Wikipedia</a>
+                    </li>
+                </ul>
+            </details>
+        </div>
+    </div>
+
+    <script>
+
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open(
+            "GET",
+            "https://raw.githubusercontent.com/UnigramDev/Unigram/develop/Unigram/Unigram/Unigram.csproj",
+            false
+        ); // Synchronous because I don't care :)
+        xmlHttp.send(null); //Null body
+
+        XMLToParse = xmlHttp.responseText;
 
 
-</script>
+        parser = new DOMParser();
+        xmlDoc = parser.parseFromString(XMLToParse, "application/xml");
+
+        var first_element = xmlDoc.activeElement;
+        var property_group = null;
+        var min_version_node = null;
+        children = first_element.children;
+        for (let index = 0; index < children.length; index++) {
+            const element = children[index];
+
+            if (element.nodeName == "PropertyGroup") {
+                property_group = element;
+                break;
+            }
+        }
+        if (property_group == null) {
+            document.write("ERROR! PropertyGroup not found!");
+        }
+
+        children = property_group.children;
+        for (let index = 0; index < children.length; index++) {
+            const element = children[index];
+
+            if (element.nodeName == "TargetPlatformMinVersion") {
+                min_version_node = element;
+                break;
+            }
+        }
+        if (min_version_node == null) {
+            document.write("ERROR! TargetPlatformMinVersion not found!");
+        }
+
+        var min_version = document.getElementById("min_version");
+        min_version.innerText = min_version_node.textContent;
+
+
+    </script>
+</body>
