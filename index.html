@@ -72,7 +72,7 @@
         parser = new DOMParser();
         xmlDoc = parser.parseFromString(XMLToParse, "application/xml");
 
-        var first_element = xmlDoc.activeElement;
+        var first_element = xmlDoc.firstChild;
         var property_group = null;
         var min_version_node = null;
         children = first_element.children;
